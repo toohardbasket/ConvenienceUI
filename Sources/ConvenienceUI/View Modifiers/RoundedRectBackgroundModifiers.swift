@@ -8,15 +8,15 @@
 import SwiftUI
 
 extension View {
-    public func borderedRoundedRectBackground<S: ShapeStyle>(_ style: S, _ strokeStyle: S, radius: CGFloat = 8, lineWidth: CGFloat = 10, borderInset: CGFloat = 0) -> some View {
-        return modifier(BorderedRoundedRectBackground<S>(style: style, strokeStyle: strokeStyle, radius: radius, lineWidth: lineWidth, inset: borderInset))
+    public func borderedRoundedRectBackground<S1: ShapeStyle, S2: ShapeStyle>(_ style: S1, _ strokeStyle: S2, radius: CGFloat = 8, lineWidth: CGFloat = 10, borderInset: CGFloat = 0) -> some View {
+        return modifier(BorderedRoundedRectBackground<S1, S2>(style: style, strokeStyle: strokeStyle, radius: radius, lineWidth: lineWidth, inset: borderInset))
     }
 }
 
-struct BorderedRoundedRectBackground<S: ShapeStyle>: ViewModifier {
+struct BorderedRoundedRectBackground<S1: ShapeStyle, S2: ShapeStyle>: ViewModifier {
     
-    var style: S
-    var strokeStyle: S
+    var style: S1
+    var strokeStyle: S2
     var radius: CGFloat
     var lineWidth: CGFloat
     var inset: CGFloat
@@ -27,7 +27,6 @@ struct BorderedRoundedRectBackground<S: ShapeStyle>: ViewModifier {
             .roundedRectBorderOverlay(strokeStyle, lineWidth: lineWidth, inset: inset)
     }
 }
-
 
 extension View {
     public func roundedRectBackground<S: ShapeStyle>(_ style: S, radius: CGFloat = 8) -> some View {
