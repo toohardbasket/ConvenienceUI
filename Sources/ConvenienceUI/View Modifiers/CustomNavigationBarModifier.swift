@@ -8,29 +8,51 @@
 import SwiftUI
 
 extension View {
-    func customNavigationBar<T: ToolbarContent, B: View>(isRoot: Bool, backButton: (() -> B)? = nil, toolbarContent: (() -> T)? = nil) -> some View {
+    public func customNavigationBar<T: ToolbarContent, B: View>(isRoot: Bool, backButton: @escaping () -> B, toolbarContent: @escaping () -> T) -> some View {
         return modifier(CustomNavigationBar(isRoot: isRoot, backButton: backButton, toolbarContent: toolbarContent))
+    }
+    
+    public func customNavigationBar<B: View>(isRoot: Bool, backButton: @escaping () -> B) -> some View{
+        return modifier(CustomNavigationBar(isRoot: isRoot, backButton: backButton, toolbarContent: {
+            ToolbarItemGroup {
+                EmptyView()
+            }
+        }))
+    }
+    
+    public func customNavigationBar<T: ToolbarContent>(isRoot: Bool, toolbarContent: @escaping () -> T) -> some View{
+        return modifier(CustomNavigationBar(isRoot: isRoot, backButton: {
+            EmptyView()
+        }, toolbarContent: toolbarContent))
     }
 }
 
-struct CustomNavigationBar<T: ToolbarContent, B: View>: ViewModifier {
+public struct CustomNavigationBar<T: ToolbarContent, B: View>: ViewModifier {
     
-    @Environment(\.dismiss) private var dismiss
-    var isRoot: Bool
-    var backButton: (() -> B)?
-    var toolbarContent: (() -> T)?
+    public var isRoot: Bool
+    public var backButton: () -> B
+    public var toolbarContent: () -> T
     
-    func body(content: Content) -> some View {
+    public init(isRoot: Bool, backButton: @escaping () -> B, toolbarContent: @escaping () -> T) {
+        self.isRoot = isRoot
+        self.backButton = backButton
+        self.toolbarContent = toolbarContent
+    }
+    
+    public func body(content: Content) -> some View {
+        
+        let backButton = backButton()
+        
         return content
             .navigationBarBackButtonHidden(true)
             .toolbar {
                 if !isRoot,
-                    let backButton = backButton {
+                   B.self != EmptyView.self {
                     ToolbarItem(placement: .navigationBarLeading) {
-                        backButton()
+                        backButton
                     }
                 }
-                toolbarContent?()
+                toolbarContent()
             }
             .toolbarBackground(.hidden, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)

@@ -9,9 +9,9 @@ import SwiftUI
 
 @available(iOS 17.0, *)
 extension View {
-    func scenePhaseAction(active: ((_ oldValue: ScenePhase) -> Void)? = nil,
-                                inactive: ((_ oldValue: ScenePhase) -> Void)? = nil,
-                                background: ((_ oldValue: ScenePhase) -> Void)? = nil) -> some View {
+    public func scenePhaseAction(active: ((_ oldValue: ScenePhase) -> Void)? = nil,
+                                 inactive: ((_ oldValue: ScenePhase) -> Void)? = nil,
+                                 background: ((_ oldValue: ScenePhase) -> Void)? = nil) -> some View {
         return modifier(ScenePhaseAction(active: active, inactive: inactive, background: background))
     }
 }
