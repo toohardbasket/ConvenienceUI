@@ -48,13 +48,23 @@ public struct CustomNavigationBar<T: ToolbarContent, B: View>: ViewModifier {
             .toolbar {
                 if !isRoot,
                    B.self != EmptyView.self {
+                    #if os(iOS)
                     ToolbarItem(placement: .navigationBarLeading) {
                         backButton
                     }
+                    #elseif os(macOS)
+                    ToolbarItem(placement: .navigation) {
+                        backButton
+                    }
+                    #endif
                 }
                 toolbarContent()
             }
+            #if os(iOS)
             .toolbarBackground(.hidden, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
+            #elseif os(macOS)
+            .toolbarBackground(.hidden, for: .windowToolbar)
+            #endif
     }
 }
